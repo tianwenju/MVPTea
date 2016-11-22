@@ -1,4 +1,4 @@
-package com.wenjutian.mvplibrary.di;
+package com.wenjutian.mvplibrary.di.module;
 
 import android.app.Application;
 
