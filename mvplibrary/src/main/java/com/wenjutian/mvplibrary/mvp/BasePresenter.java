@@ -13,17 +13,25 @@ public class BasePresenter<M, V extends IView> implements Ipresenter {
     protected CompositeSubscription mCompositeSubscription;
 
     protected M mModel;
-    protected V mRootView;
+    protected V mView;
 
 
-    public BasePresenter(M model, V rootView) {
+    public BasePresenter(M model, V mView) {
         this.mModel = model;
-        this.mRootView = rootView;
+        this.mView = mView;
         onStart();
     }
 
+    public M getmModel() {
+        return mModel;
+    }
+
+    public V getmView() {
+        return mView;
+    }
+
     public BasePresenter(V rootView) {
-        this.mRootView = rootView;
+        this.mView = rootView;
         onStart();
     }
 
@@ -44,7 +52,7 @@ public class BasePresenter<M, V extends IView> implements Ipresenter {
             EventBus.getDefault().unregister(this);//解除注册eventbus
         unSubscribe();//解除订阅
         this.mModel = null;
-        this.mRootView = null;
+        this.mView = null;
     }
 
     protected void handleError(Throwable throwable) {

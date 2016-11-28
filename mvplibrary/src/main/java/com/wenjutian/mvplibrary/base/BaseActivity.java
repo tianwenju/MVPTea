@@ -61,6 +61,9 @@ public abstract class BaseActivity<P extends BasePresenter> extends RxAppCompatA
         return super.onCreateView(name, context, attrs);
     }
 
+    public P getmPresenter() {
+        return mPresenter;
+    }
 
     @Override
     protected void onResume() {

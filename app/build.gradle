@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.antfortune.freeline'
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
     buildToolsVersion rootProject.ext.android["buildToolsVersion"]
@@ -18,13 +19,19 @@ android {
         }
     }
 }
-
 dependencies {
+    debugCompile 'com.antfortune.freeline:runtime:0.6.3'
+    releaseCompile 'com.antfortune.freeline:runtime-no-op:0.6.3'
+    testCompile 'com.antfortune.freeline:runtime-no-op:0.6.3'
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
+   // testCompile rootProject.ext.dependencies["junit"]
+    apt rootProject.ext.dependencies["dagger2-apt-compiler"]
+    provided rootProject.ext.dependencies["javax.annotation"]
+    apt rootProject.ext.dependencies["butterknife-apt"]
+    compile rootProject.ext.dependencies["paginate"]
+    debugCompile rootProject.ext.dependencies["canary-debug"]
+    releaseCompile rootProject.ext.dependencies["canary-release"]
+    testCompile rootProject.ext.dependencies["canary-release"]
     compile project(':mvplibrary')
 }

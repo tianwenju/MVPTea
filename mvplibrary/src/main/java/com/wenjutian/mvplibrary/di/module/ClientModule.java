@@ -1,9 +1,13 @@
 package com.wenjutian.mvplibrary.di.module;
 
+import android.app.Application;
 import android.text.TextUtils;
 
+import com.wenjutian.mvplibrary.DataHelper;
 import com.wenjutian.mvplibrary.http.GlobeHttpHandler;
+import com.wenjutian.mvplibrary.http.RequestIntercept;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -20,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @author V.Wenju.Tian
- * 使用构建者模式,模块化组件
+ *         使用构建者模式,模块化组件
  */
 @Module
 public class ClientModule {
@@ -83,8 +87,6 @@ public class ClientModule {
     }
 
 
-
-
     /**
      * @param builder
      * @param client
@@ -101,6 +103,30 @@ public class ClientModule {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())//使用rxjava
                 .addConverterFactory(GsonConverterFactory.create())//使用Gson
                 .build();
+    }
+
+    @Singleton
+    @Provides
+    Cache provideCache(File cacheFile) {
+        return new Cache(cacheFile, HTTP_RESPONSE_DISK_CACHE_MAX_SIZE);//设置缓存路径和大小
+    }
+
+
+
+    /**
+     * 提供缓存地址
+     */
+
+    @Singleton
+    @Provides
+    File provideCacheFile(Application application) {
+        return DataHelper.getCacheFile(application);
+    }
+
+    @Singleton
+    @Provides
+    Interceptor provideIntercept() {
+        return new RequestIntercept(mHandler);//打印请求信息的拦截器
     }
 
     /**
@@ -130,6 +156,7 @@ public class ClientModule {
         private HttpUrl apiUrl = HttpUrl.parse("https://api.github.com/");
         private GlobeHttpHandler handler;
         private Interceptor[] interceptors;
+
         private Buidler() {
         }
 
@@ -150,6 +177,7 @@ public class ClientModule {
             this.interceptors = interceptors;
             return this;
         }
+
         public ClientModule build() {
             if (apiUrl == null) {
                 throw new IllegalStateException("baseurl is required");
