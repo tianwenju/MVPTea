@@ -18,6 +18,7 @@ public class MainActivity extends WEActivity<UsersPresenter> {
     @Override
     protected void initData() {
 
+
         getmPresenter().requestUsers(true);
     }
 
